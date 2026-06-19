@@ -1,6 +1,6 @@
---[[
-    Dandy's World Custom GUI v2 (исправлены ссылки)
-]]
+-- =====================================================
+-- ЧАСТЬ 1: НАСТРОЙКИ, GUI, ESP (HIGHLIGHT)
+-- =====================================================
 
 local Settings = {
     PlayerESP = false,
@@ -18,63 +18,67 @@ local Settings = {
     JumpValue = 50
 }
 
--- ================== ПРАВИЛЬНЫЕ ССЫЛКИ (raw) ==================
-local Images = {
-    Background = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F59_20260620005128.png",
-    Burger = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F55_20260620004602.png",
-    Close = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F56_20260620004645.png",
-    ToggleOn = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F57_20260620004836.png",
-    ToggleOff = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F57_20260620004811.png",
-    Logo = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F58_20260620004959.png",
-}
-
--- ================== СОЗДАНИЕ GUI ==================
+-- ================== СОЗДАНИЕ МЕНЮ ==================
 local function createUI()
     local player = game.Players.LocalPlayer
     local gui = Instance.new("ScreenGui")
-    gui.Name = "DandyGUI_" .. tostring(math.random(10000,99999))
+    gui.Name = "DandyGUI"
     gui.ResetOnSpawn = false
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     if syn and syn.protect_gui then pcall(syn.protect_gui, gui) end
     gui.Parent = player.PlayerGui
 
-    -- Кнопка-бургер
-    local burger = Instance.new("ImageButton")
-    burger.Size = UDim2.new(0, 60, 0, 60)
+    local burger = Instance.new("TextButton")
+    burger.Size = UDim2.new(0, 50, 0, 50)
     burger.Position = UDim2.new(0, 10, 0, 10)
-    burger.BackgroundTransparency = 1
-    burger.Image = Images.Burger
+    burger.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
+    burger.Text = "≡"
+    burger.TextColor3 = Color3.fromRGB(255, 255, 255)
+    burger.Font = Enum.Font.GothamBold
+    burger.TextSize = 30
+    burger.BorderSizePixel = 0
+    Instance.new("UICorner", burger).CornerRadius = UDim.new(0, 10)
     burger.Parent = gui
 
-    -- Главное меню
-    local mainFrame = Instance.new("ImageLabel")
-    mainFrame.Size = UDim2.new(0, 400, 0, 600)
-    mainFrame.Position = UDim2.new(0.5, -200, 0.5, -300)
-    mainFrame.BackgroundTransparency = 1
-    mainFrame.Image = Images.Background
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Size = UDim2.new(0, 300, 0, 500)
+    mainFrame.Position = UDim2.new(0.5, -150, 0.5, -250)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+    mainFrame.BorderSizePixel = 0
     mainFrame.Visible = false
+    mainFrame.Active = true
+    mainFrame.Draggable = true
+    Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
     mainFrame.Parent = gui
 
-    -- Логотип
-    local logo = Instance.new("ImageLabel")
-    logo.Size = UDim2.new(0, 200, 0, 60)
-    logo.Position = UDim2.new(0.5, -100, 0, 10)
-    logo.BackgroundTransparency = 1
-    logo.Image = Images.Logo
-    logo.Parent = mainFrame
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 40)
+    title.Position = UDim2.new(0, 0, 0, 0)
+    title.BackgroundColor3 = Color3.fromRGB(50, 40, 90)
+    title.Text = "Dandy World v8.0"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 24
+    title.TextXAlignment = Enum.TextXAlignment.Center
+    title.TextYAlignment = Enum.TextYAlignment.Center
+    Instance.new("UICorner", title).CornerRadius = UDim.new(0, 12)
+    title.Parent = mainFrame
 
-    -- Кнопка закрытия
-    local closeBtn = Instance.new("ImageButton")
-    closeBtn.Size = UDim2.new(0, 40, 0, 40)
-    closeBtn.Position = UDim2.new(1, -50, 0, 10)
-    closeBtn.BackgroundTransparency = 1
-    closeBtn.Image = Images.Close
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0, 30, 0, 30)
+    closeBtn.Position = UDim2.new(1, -35, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    closeBtn.Text = "✕"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.TextSize = 20
+    closeBtn.BorderSizePixel = 0
+    Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
     closeBtn.Parent = mainFrame
 
-    -- Контейнер для переключателей
     local scroll = Instance.new("ScrollingFrame")
-    scroll.Size = UDim2.new(1, -20, 1, -100)
-    scroll.Position = UDim2.new(0, 10, 0, 80)
+    scroll.Size = UDim2.new(1, -10, 1, -50)
+    scroll.Position = UDim2.new(0, 5, 0, 45)
     scroll.BackgroundTransparency = 1
     scroll.BorderSizePixel = 0
     scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -83,53 +87,52 @@ local function createUI()
     scroll.Parent = mainFrame
 
     local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 8)
+    layout.Padding = UDim.new(0, 6)
     layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     layout.VerticalAlignment = Enum.VerticalAlignment.Top
     layout.Parent = scroll
 
-    -- Функция создания переключателя
     local function createToggle(name, state, callback)
-        local f = Instance.new("ImageLabel")
-        f.Size = UDim2.new(0.95, 0, 0, 50)
-        f.BackgroundTransparency = 1
+        local f = Instance.new("Frame")
+        f.Size = UDim2.new(0.95, 0, 0, 40)
+        f.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+        f.BorderSizePixel = 0
+        Instance.new("UICorner", f).CornerRadius = UDim.new(0, 8)
         f.Parent = scroll
 
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(0.6, 0, 1, 0)
-        label.Position = UDim2.new(0, 12, 0, 0)
+        label.Position = UDim2.new(0, 10, 0, 0)
         label.BackgroundTransparency = 1
         label.Text = name
-        label.TextColor3 = Color3.fromRGB(255, 255, 255)
-        label.Font = Enum.Font.GothamBold
-        label.TextSize = 18
+        label.TextColor3 = Color3.fromRGB(230, 230, 240)
+        label.Font = Enum.Font.Gotham
+        label.TextSize = 16
         label.TextXAlignment = Enum.TextXAlignment.Left
         label.TextYAlignment = Enum.TextYAlignment.Center
         label.Parent = f
 
-        local btn = Instance.new("ImageButton")
-        btn.Size = UDim2.new(0, 80, 0, 40)
-        btn.Position = UDim2.new(1, -90, 0.5, -20)
-        btn.BackgroundTransparency = 1
-        btn.Image = state and Images.ToggleOn or Images.ToggleOff
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(0, 60, 0, 30)
+        btn.Position = UDim2.new(1, -65, 0.5, -15)
+        btn.BackgroundColor3 = state and Color3.fromRGB(0, 200, 120) or Color3.fromRGB(180, 60, 60)
+        btn.Text = state and "ON" or "OFF"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamBold
+        btn.TextSize = 14
+        btn.BorderSizePixel = 0
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
         btn.Parent = f
 
         local cur = state
         btn.MouseButton1Click:Connect(function()
             cur = not cur
-            btn.Image = cur and Images.ToggleOn or Images.ToggleOff
+            btn.BackgroundColor3 = cur and Color3.fromRGB(0, 200, 120) or Color3.fromRGB(180, 60, 60)
+            btn.Text = cur and "ON" or "OFF"
             if callback then callback(cur) end
         end)
-
-        return function(ns)
-            if ns ~= nil then
-                cur = ns
-                btn.Image = cur and Images.ToggleOn or Images.ToggleOff
-            end
-        end
     end
 
-    -- Все переключатели
     createToggle("ESP Игроков", Settings.PlayerESP, function(v) Settings.PlayerESP = v end)
     createToggle("ESP Твистедов", Settings.TwistedESP, function(v) Settings.TwistedESP = v end)
     createToggle("ESP Генераторов", Settings.GeneratorESP, function(v) Settings.GeneratorESP = v end)
@@ -137,25 +140,18 @@ local function createUI()
     createToggle("ESP Капсул", Settings.CapsuleESP, function(v) Settings.CapsuleESP = v end)
     createToggle("Авто-скиллчек", Settings.AutoSkillCheck, function(v) Settings.AutoSkillCheck = v end)
     createToggle("Автофарм", Settings.AutoFarm, function(v) Settings.AutoFarm = v end)
-    createToggle("Авто-сбор", Settings.AutoCollect, function(v) Settings.AutoCollect = v end)
-    createToggle("Авто-капсулы", Settings.AutoCapsule, function(v) Settings.AutoCapsule = v end)
+    createToggle("Авто-сбор предметов", Settings.AutoCollect, function(v) Settings.AutoCollect = v end)
+    createToggle("Авто-сбор капсул", Settings.AutoCapsule, function(v) Settings.AutoCapsule = v end)
     createToggle("Полная яркость", Settings.FullBright, function(v) Settings.FullBright = v end)
     createToggle("Ноклип", Settings.Noclip, function(v) Settings.Noclip = v end)
 
-    -- Обновление размера скролла
     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
+        scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 10)
     end)
 
-    -- Открытие/закрытие
-    burger.MouseButton1Click:Connect(function()
-        mainFrame.Visible = not mainFrame.Visible
-    end)
-    closeBtn.MouseButton1Click:Connect(function()
-        mainFrame.Visible = false
-    end)
+    burger.MouseButton1Click:Connect(function() mainFrame.Visible = not mainFrame.Visible end)
+    closeBtn.MouseButton1Click:Connect(function() mainFrame.Visible = false end)
 
-    -- Перетаскивание
     local drag = false
     local dragStart, startPos
     mainFrame.InputBegan:Connect(function(input)
@@ -174,15 +170,302 @@ local function createUI()
             mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
         end
     end)
-
-    print("✅ GUI с картинками загружен. Нажми на бургер.")
 end
 
--- ================== ESP, автофарм и остальные функции ==================
--- (они такие же, как в прошлом скрипте, но я их здесь не повторяю, чтобы не было дублирования)
--- Вставь их сюда из предыдущей версии.
+-- ================== ESP ЧЕРЕЗ HIGHLIGHT ==================
+local function setupESP()
+    local player = game.Players.LocalPlayer
+    local function makeESP(color, name)
+        local h = Instance.new("Highlight")
+        h.Name = name
+        h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        h.FillColor = color
+        h.FillTransparency = 0.5
+        h.OutlineTransparency = 1
+        return h
+    end
+
+    game:GetService("RunService").Heartbeat:Connect(function()
+        for _, v in ipairs(workspace:GetDescendants()) do
+            if v:IsA("Highlight") and v.Name:match("ESP$") then v:Destroy() end
+        end
+
+        if Settings.PlayerESP then
+            for _, p in ipairs(game.Players:GetPlayers()) do
+                if p ~= player and p.Character then
+                    local clone = makeESP(Color3.fromRGB(0,255,0), "PlayerESP")
+                    clone.Adornee = p.Character
+                    clone.Parent = p.Character
+                end
+            end
+        end
+
+        if Settings.TwistedESP then
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("Model") and (obj.Name:lower():match("twisted") or obj.Name:lower():match("enemy") or obj.Name:lower():match("monster")) then
+                    local clone = makeESP(Color3.fromRGB(255,0,0), "TwistedESP")
+                    clone.Adornee = obj
+                    clone.Parent = obj
+                end
+            end
+        end
+
+        if Settings.GeneratorESP then
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("Model") and (obj.Name:lower():match("generator") or obj.Name:lower():match("gen")) then
+                    local clone = makeESP(Color3.fromRGB(255,255,0), "GeneratorESP")
+                    clone.Adornee = obj
+                    clone.Parent = obj
+                end
+            end
+        end
+
+        if Settings.ItemESP then
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("BasePart") or obj:IsA("Model") then
+                    if obj.Name:lower():match("item") or obj.Name:lower():match("tape") or obj.Name:lower():match("pickup") then
+                        local clone = makeESP(Color3.fromRGB(0,255,255), "ItemESP")
+                        clone.Adornee = obj
+                        clone.Parent = obj
+                    end
+                end
+            end
+        end
+
+        if Settings.CapsuleESP then
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("Model") and (obj.Name:lower():match("capsule") or obj.Name:lower():match("pod")) then
+                    local clone = makeESP(Color3.fromRGB(255,0,255), "CapsuleESP")
+                    clone.Adornee = obj
+                    clone.Parent = obj
+                end
+            end
+        end
+    end)
+end
+-- =====================================================
+-- ЧАСТЬ 2: АВТО-СКИЛЛЧЕК, АВТОФАРМ, АВТО-СБОР, НОКЛИП, FULLBRIGHT, СКОРОСТЬ/ПРЫЖОК, ЗАПУСК
+-- =====================================================
+
+-- ================== АВТО-СКИЛЛЧЕК ==================
+task.spawn(function()
+    while task.wait(0.05) do
+        if not Settings.AutoSkillCheck then continue end
+        local gui = game.Players.LocalPlayer.PlayerGui
+        if gui then
+            local sc = gui:FindFirstChild("SkillCheck", true) or gui:FindFirstChild("MiniGame", true)
+            if sc and sc.Visible then
+                local btn = sc:FindFirstChild("Button") or sc:FindFirstChild("Click")
+                if btn and btn:IsA("TextButton") then
+                    pcall(function() btn:FireServer() end)
+                    pcall(function() btn:Click() end)
+                end
+            end
+        end
+    end
+end)
+
+-- ================== АВТОФАРМ ==================
+local farm = { active = false, step = 0, idx = 1 }
+
+local function getGenerators()
+    local gens = {}
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and (obj.Name:lower():match("generator") or obj.Name:lower():match("gen")) then
+            table.insert(gens, obj)
+        end
+    end
+    return gens
+end
+
+local function getElevator()
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and (obj.Name:lower():match("elevator") or obj.Name:lower():match("lift")) then
+            return obj
+        end
+    end
+    return nil
+end
+
+local function teleportTo(pos)
+    local p = game.Players.LocalPlayer
+    if p and p.Character then
+        local root = p.Character:FindFirstChild("HumanoidRootPart") or p.Character.PrimaryPart
+        if root then root.CFrame = CFrame.new(pos) end
+    end
+end
+
+local function interactWith(obj)
+    local cd = obj:FindFirstChild("ClickDetector") or obj:FindFirstChild("ProximityPrompt")
+    if cd then
+        if cd:IsA("ClickDetector") then cd:FireClick(game.Players.LocalPlayer)
+        elseif cd:IsA("ProximityPrompt") then cd:Hold(); task.wait(0.3); cd:Release() end
+    end
+end
+
+task.spawn(function()
+    while true do
+        task.wait(1)
+        if Settings.AutoFarm and not farm.active then
+            farm.active = true
+            local gens = getGenerators()
+            if #gens > 0 then
+                farm.idx = 1
+                farm.step = 0
+                while farm.active do
+                    local p = game.Players.LocalPlayer
+                    if not p or not p.Character then task.wait(1) continue end
+                    local root = p.Character:FindFirstChild("HumanoidRootPart") or p.Character.PrimaryPart
+                    if not root then task.wait(1) continue end
+
+                    local gen = gens[farm.idx]
+                    if not gen then
+                        local el = getElevator()
+                        if el then
+                            local elPos = el.PrimaryPart and el.PrimaryPart.Position or el:FindFirstChild("HumanoidRootPart") and el:FindFirstChild("HumanoidRootPart").Position
+                            if elPos then
+                                if (root.Position - elPos).Magnitude > 5 then teleportTo(elPos) end
+                                task.wait(0.5)
+                                interactWith(el)
+                            end
+                        end
+                        farm.active = false
+                        break
+                    end
+
+                    local genPos = gen.PrimaryPart and gen.PrimaryPart.Position or gen:FindFirstChild("HumanoidRootPart") and gen:FindFirstChild("HumanoidRootPart").Position
+                    if not genPos then task.wait(1) continue end
+
+                    if farm.step == 0 then
+                        if (root.Position - genPos).Magnitude > 5 then
+                            teleportTo(genPos + Vector3.new(0,2,0))
+                        else
+                            farm.step = 1
+                        end
+                    elseif farm.step == 1 then
+                        interactWith(gen)
+                        task.wait(1)
+                        farm.step = 2
+                    elseif farm.step == 2 then
+                        teleportTo(genPos + Vector3.new(0,30,0))
+                        task.wait(1)
+                        farm.step = 3
+                    elseif farm.step == 3 then
+                        teleportTo(genPos + Vector3.new(0,2,0))
+                        task.wait(0.5)
+                        farm.step = 4
+                    elseif farm.step == 4 then
+                        farm.idx = farm.idx + 1
+                        farm.step = 0
+                    end
+                    task.wait(0.5)
+                end
+            else
+                farm.active = false
+            end
+        elseif not Settings.AutoFarm and farm.active then
+            farm.active = false
+        end
+    end
+end)
+
+-- ================== АВТО-СБОР ПРЕДМЕТОВ ==================
+task.spawn(function()
+    while task.wait(0.3) do
+        if not Settings.AutoCollect then continue end
+        local p = game.Players.LocalPlayer
+        if not p or not p.Character then continue end
+        local root = p.Character:FindFirstChild("HumanoidRootPart") or p.Character.PrimaryPart
+        if not root then continue end
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("BasePart") or obj:IsA("Model") then
+                if obj.Name:lower():match("item") or obj.Name:lower():match("tape") or obj.Name:lower():match("pickup") then
+                    local pos = obj.PrimaryPart and obj.PrimaryPart.Position or obj:FindFirstChild("HumanoidRootPart") and obj:FindFirstChild("HumanoidRootPart").Position
+                    if pos and (root.Position - pos).Magnitude < 15 then
+                        teleportTo(pos + Vector3.new(0,2,0))
+                        task.wait(0.1)
+                        interactWith(obj)
+                        break
+                    end
+                end
+            end
+        end
+    end
+end)
+
+-- ================== АВТО-СБОР КАПСУЛ ==================
+task.spawn(function()
+    while task.wait(0.3) do
+        if not Settings.AutoCapsule then continue end
+        local p = game.Players.LocalPlayer
+        if not p or not p.Character then continue end
+        local root = p.Character:FindFirstChild("HumanoidRootPart") or p.Character.PrimaryPart
+        if not root then continue end
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("Model") and (obj.Name:lower():match("capsule") or obj.Name:lower():match("pod")) then
+                local pos = obj.PrimaryPart and obj.PrimaryPart.Position or obj:FindFirstChild("HumanoidRootPart") and obj:FindFirstChild("HumanoidRootPart").Position
+                if pos and (root.Position - pos).Magnitude < 15 then
+                    teleportTo(pos + Vector3.new(0,2,0))
+                    task.wait(0.1)
+                    interactWith(obj)
+                    break
+                end
+            end
+        end
+    end
+end)
+
+-- ================== НОКЛИП ==================
+task.spawn(function()
+    while task.wait(0.1) do
+        if Settings.Noclip then
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                for _, part in ipairs(char:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end
+    end
+end)
+
+-- ================== FULLBRIGHT ==================
+task.spawn(function()
+    while task.wait(0.5) do
+        local lighting = game:GetService("Lighting")
+        if Settings.FullBright then
+            lighting.Brightness = 2
+            lighting.ClockTime = 14
+            lighting.FogEnd = 100000
+            lighting.GlobalShadows = false
+            lighting.OutdoorAmbient = Color3.fromRGB(128,128,128)
+        else
+            lighting.Brightness = 0.5
+            lighting.ClockTime = 0
+            lighting.FogEnd = 1000
+            lighting.GlobalShadows = true
+            lighting.OutdoorAmbient = Color3.fromRGB(0,0,0)
+        end
+    end
+end)
+
+-- ================== СКОРОСТЬ И ПРЫЖОК ==================
+task.spawn(function()
+    while task.wait(0.1) do
+        local char = game.Players.LocalPlayer.Character
+        if char then
+            local hum = char:FindFirstChild("Humanoid")
+            if hum then
+                hum.WalkSpeed = Settings.SpeedValue or 16
+                hum.JumpPower = Settings.JumpValue or 50
+            end
+        end
+    end
+end)
 
 -- ================== ЗАПУСК ==================
 createUI()
--- setupESP() -- если нужно
-print("✅ Исправленный скрипт загружен. Теперь картинки должны отображаться.")
+setupESP()
+print("✅ Dandy World v8.0 загружен. Нажми на бургер (≡) для меню.")
