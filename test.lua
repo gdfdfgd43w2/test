@@ -1,22 +1,32 @@
 --[[
-    Dandy's World Ultimate Script v6.0 (No Glitches)
-    Собрано из проверенных частей G0bbyD0llan, Axonic, Kles, Pleiadex.
-    Все функции стабильны, Fullbright не мигает, ESP работает на 100%.
+    Dandy's World Custom GUI
+    Твой дизайн: бургер, крест, кнопки вкл/выкл, лого, фон.
 ]]
 
--- Настройки (по умолчанию все выключены)
 local Settings = {
     PlayerESP = false,
     TwistedESP = false,
     GeneratorESP = false,
     ItemESP = false,
+    CapsuleESP = false,
     AutoSkillCheck = false,
     AutoFarm = false,
     AutoCollect = false,
+    AutoCapsule = false,
     FullBright = false,
     Noclip = false,
     SpeedValue = 16,
     JumpValue = 50
+}
+
+-- ================== ТВОИ КАРТИНКИ С GITHUB ==================
+local Images = {
+    Background = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F59_20260620005128.png",
+    Burger = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F55_20260620004602.png",
+    Close = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F56_20260620004645.png",
+    ToggleOn = "https://github.com/gdfdfgd43w2/test/blob/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F57_20260620004836.png?raw=true",
+    ToggleOff = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F57_20260620004811.png",
+    Logo = "https://raw.githubusercontent.com/gdfdfgd43w2/test/refs/heads/main/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F58_20260620004959.png",
 }
 
 -- ================== СОЗДАНИЕ GUI ==================
@@ -29,189 +39,127 @@ local function createUI()
     if syn and syn.protect_gui then pcall(syn.protect_gui, gui) end
     gui.Parent = player.PlayerGui
 
-    -- Кнопка-бургер
-    local burger = Instance.new("TextButton")
-    burger.Size = UDim2.new(0, 48, 0, 48)
-    burger.Position = UDim2.new(0, 8, 0, 8)
-    burger.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    burger.Text = "≡"
-    burger.TextColor3 = Color3.fromRGB(255, 255, 255)
-    burger.Font = Enum.Font.GothamBold
-    burger.TextSize = 30
-    burger.BorderSizePixel = 0
-    burger.BackgroundTransparency = 0.3
-    Instance.new("UICorner", burger).CornerRadius = UDim.new(0, 12)
+    -- Кнопка-бургер (твоя картинка)
+    local burger = Instance.new("ImageButton")
+    burger.Size = UDim2.new(0, 60, 0, 60)
+    burger.Position = UDim2.new(0, 10, 0, 10)
+    burger.BackgroundTransparency = 1
+    burger.Image = Images.Burger
     burger.Parent = gui
 
-    -- Главное меню
-    local mainFrame = Instance.new("Frame")
-    mainFrame.Size = UDim2.new(0, 280, 0, 480)
-    mainFrame.Position = UDim2.new(0, 15, 0, 65)
-    mainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-    mainFrame.BorderSizePixel = 0
-    mainFrame.Active = true
-    mainFrame.Draggable = true
-    mainFrame.ClipsDescendants = true
+    -- Главное меню (твой фон)
+    local mainFrame = Instance.new("ImageLabel")
+    mainFrame.Size = UDim2.new(0, 400, 0, 600)
+    mainFrame.Position = UDim2.new(0.5, -200, 0.5, -300)
+    mainFrame.BackgroundTransparency = 1
+    mainFrame.Image = Images.Background
     mainFrame.Visible = false
-    Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
     mainFrame.Parent = gui
 
-    local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1, -20, 0, 36)
-    title.Position = UDim2.new(0, 12, 0, 6)
-    title.BackgroundTransparency = 1
-    title.Text = "Dandy World v6.0"
-    title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.Font = Enum.Font.GothamBold
-    title.TextSize = 22
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.Parent = mainFrame
+    -- Логотип (твоя картинка)
+    local logo = Instance.new("ImageLabel")
+    logo.Size = UDim2.new(0, 200, 0, 60)
+    logo.Position = UDim2.new(0.5, -100, 0, 10)
+    logo.BackgroundTransparency = 1
+    logo.Image = Images.Logo
+    logo.Parent = mainFrame
 
-    local closeBtn = Instance.new("TextButton")
-    closeBtn.Size = UDim2.new(0, 30, 0, 30)
-    closeBtn.Position = UDim2.new(1, -35, 0, 6)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-    closeBtn.Text = "✕"
-    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    closeBtn.Font = Enum.Font.GothamBold
-    closeBtn.TextSize = 20
-    closeBtn.BorderSizePixel = 0
-    Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 8)
+    -- Кнопка закрытия (твоя картинка)
+    local closeBtn = Instance.new("ImageButton")
+    closeBtn.Size = UDim2.new(0, 40, 0, 40)
+    closeBtn.Position = UDim2.new(1, -50, 0, 10)
+    closeBtn.BackgroundTransparency = 1
+    closeBtn.Image = Images.Close
     closeBtn.Parent = mainFrame
 
-    -- Функция переключателя
-    local function createToggle(name, state, callback, yOffset)
-        local f = Instance.new("Frame")
-        f.Size = UDim2.new(1, -20, 0, 28)
-        f.Position = UDim2.new(0, 12, 0, 44 + yOffset)
+    -- Контейнер для переключателей
+    local scroll = Instance.new("ScrollingFrame")
+    scroll.Size = UDim2.new(1, -20, 1, -100)
+    scroll.Position = UDim2.new(0, 10, 0, 80)
+    scroll.BackgroundTransparency = 1
+    scroll.BorderSizePixel = 0
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scroll.ScrollBarThickness = 4
+    scroll.ScrollBarImageColor3 = Color3.fromRGB(200, 180, 255)
+    scroll.Parent = mainFrame
+
+    local layout = Instance.new("UIListLayout")
+    layout.Padding = UDim.new(0, 8)
+    layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    layout.VerticalAlignment = Enum.VerticalAlignment.Top
+    layout.Parent = scroll
+
+    -- Функция создания переключателя
+    local function createToggle(name, state, callback)
+        local f = Instance.new("ImageLabel")
+        f.Size = UDim2.new(0.95, 0, 0, 50)
         f.BackgroundTransparency = 1
-        f.Parent = mainFrame
+        f.Parent = scroll
 
-        local l = Instance.new("TextLabel")
-        l.Size = UDim2.new(0.65, 0, 1, 0)
-        l.BackgroundTransparency = 1
-        l.Text = name
-        l.TextColor3 = Color3.fromRGB(220, 220, 220)
-        l.Font = Enum.Font.Gotham
-        l.TextSize = 15
-        l.TextXAlignment = Enum.TextXAlignment.Left
-        l.Parent = f
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(0.6, 0, 1, 0)
+        label.Position = UDim2.new(0, 12, 0, 0)
+        label.BackgroundTransparency = 1
+        label.Text = name
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.Font = Enum.Font.GothamBold
+        label.TextSize = 18
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.TextYAlignment = Enum.TextYAlignment.Center
+        label.Parent = f
 
-        local b = Instance.new("TextButton")
-        b.Size = UDim2.new(0, 52, 0, 24)
-        b.Position = UDim2.new(1, -56, 0.5, -12)
-        b.BackgroundColor3 = state and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(180, 0, 0)
-        b.Text = state and "ON" or "OFF"
-        b.TextColor3 = Color3.fromRGB(255, 255, 255)
-        b.Font = Enum.Font.GothamBold
-        b.TextSize = 13
-        b.BorderSizePixel = 0
-        Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
-        b.Parent = f
+        local btn = Instance.new("ImageButton")
+        btn.Size = UDim2.new(0, 80, 0, 40)
+        btn.Position = UDim2.new(1, -90, 0.5, -20)
+        btn.BackgroundTransparency = 1
+        btn.Image = state and Images.ToggleOn or Images.ToggleOff
+        btn.Parent = f
 
         local cur = state
-        b.MouseButton1Click:Connect(function()
+        btn.MouseButton1Click:Connect(function()
             cur = not cur
-            b.BackgroundColor3 = cur and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(180, 0, 0)
-            b.Text = cur and "ON" or "OFF"
+            btn.Image = cur and Images.ToggleOn or Images.ToggleOff
             if callback then callback(cur) end
         end)
+
         return function(ns)
-            if ns ~= nil then cur = ns; b.BackgroundColor3 = cur and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(180, 0, 0); b.Text = cur and "ON" or "OFF" end
+            if ns ~= nil then
+                cur = ns
+                btn.Image = cur and Images.ToggleOn or Images.ToggleOff
+            end
         end
     end
 
-    -- Функция слайдера
-    local function createSlider(name, min, max, default, callback, yOffset)
-        local f = Instance.new("Frame")
-        f.Size = UDim2.new(1, -20, 0, 34)
-        f.Position = UDim2.new(0, 12, 0, 44 + yOffset)
-        f.BackgroundTransparency = 1
-        f.Parent = mainFrame
+    -- ===== ВСЕ ПЕРЕКЛЮЧАТЕЛИ =====
+    createToggle("ESP Игроков", Settings.PlayerESP, function(v) Settings.PlayerESP = v end)
+    createToggle("ESP Твистедов", Settings.TwistedESP, function(v) Settings.TwistedESP = v end)
+    createToggle("ESP Генераторов", Settings.GeneratorESP, function(v) Settings.GeneratorESP = v end)
+    createToggle("ESP Предметов", Settings.ItemESP, function(v) Settings.ItemESP = v end)
+    createToggle("ESP Капсул", Settings.CapsuleESP, function(v) Settings.CapsuleESP = v end)
+    createToggle("Авто-скиллчек", Settings.AutoSkillCheck, function(v) Settings.AutoSkillCheck = v end)
+    createToggle("Автофарм", Settings.AutoFarm, function(v) Settings.AutoFarm = v end)
+    createToggle("Авто-сбор", Settings.AutoCollect, function(v) Settings.AutoCollect = v end)
+    createToggle("Авто-капсулы", Settings.AutoCapsule, function(v) Settings.AutoCapsule = v end)
+    createToggle("Полная яркость", Settings.FullBright, function(v) Settings.FullBright = v end)
+    createToggle("Ноклип", Settings.Noclip, function(v) Settings.Noclip = v end)
 
-        local l = Instance.new("TextLabel")
-        l.Size = UDim2.new(0.5, 0, 1, 0)
-        l.BackgroundTransparency = 1
-        l.Text = name
-        l.TextColor3 = Color3.fromRGB(220, 220, 220)
-        l.Font = Enum.Font.Gotham
-        l.TextSize = 15
-        l.TextXAlignment = Enum.TextXAlignment.Left
-        l.Parent = f
+    -- Обновляем размер скролла
+    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
+    end)
 
-        local val = Instance.new("TextLabel")
-        val.Size = UDim2.new(0.2, 0, 1, 0)
-        val.Position = UDim2.new(0.8, 0, 0, 0)
-        val.BackgroundTransparency = 1
-        val.Text = tostring(default)
-        val.TextColor3 = Color3.fromRGB(255,255,255)
-        val.Font = Enum.Font.GothamBold
-        val.TextSize = 15
-        val.TextXAlignment = Enum.TextXAlignment.Right
-        val.Parent = f
+    -- Открытие/закрытие
+    burger.MouseButton1Click:Connect(function()
+        mainFrame.Visible = not mainFrame.Visible
+    end)
+    closeBtn.MouseButton1Click:Connect(function()
+        mainFrame.Visible = false
+    end)
 
-        local slider = Instance.new("Frame")
-        slider.Size = UDim2.new(0.7, 0, 0, 5)
-        slider.Position = UDim2.new(0, 0, 0.7, 0)
-        slider.BackgroundColor3 = Color3.fromRGB(60,60,60)
-        slider.BorderSizePixel = 0
-        Instance.new("UICorner", slider).CornerRadius = UDim.new(0, 3)
-        slider.Parent = f
-
-        local fill = Instance.new("Frame")
-        fill.Size = UDim2.new((default-min)/(max-min), 0, 1, 0)
-        fill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-        fill.BorderSizePixel = 0
-        Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 3)
-        fill.Parent = slider
-
-        local dragging = false
-        local function update(input)
-            local pos = input.Position.X
-            local size = slider.AbsoluteSize.X
-            if size == 0 then return end
-            local newVal = math.clamp((pos - slider.AbsolutePosition.X)/size, 0, 1)
-            local value = math.round(min + newVal*(max-min))
-            fill.Size = UDim2.new(newVal, 0, 1, 0)
-            val.Text = tostring(value)
-            callback(value)
-        end
-
-        slider.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                dragging = true; update(input)
-            end
-        end)
-        slider.InputEnded:Connect(function() dragging = false end)
-        game:GetService("UserInputService").InputChanged:Connect(function(input)
-            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-                update(input)
-            end
-        end)
-        return f
-    end
-
-    local yOff = 0
-    createToggle("ESP Игроков", Settings.PlayerESP, function(v) Settings.PlayerESP = v end, yOff); yOff = yOff + 30
-    createToggle("ESP Твистедов", Settings.TwistedESP, function(v) Settings.TwistedESP = v end, yOff); yOff = yOff + 30
-    createToggle("ESP Генераторов", Settings.GeneratorESP, function(v) Settings.GeneratorESP = v end, yOff); yOff = yOff + 30
-    createToggle("ESP Предметов", Settings.ItemESP, function(v) Settings.ItemESP = v end, yOff); yOff = yOff + 30
-    createToggle("Авто-скиллчек", Settings.AutoSkillCheck, function(v) Settings.AutoSkillCheck = v end, yOff); yOff = yOff + 30
-    createToggle("Автофарм", Settings.AutoFarm, function(v) Settings.AutoFarm = v end, yOff); yOff = yOff + 30
-    createToggle("Авто-сбор", Settings.AutoCollect, function(v) Settings.AutoCollect = v end, yOff); yOff = yOff + 30
-    createToggle("Полная яркость", Settings.FullBright, function(v) Settings.FullBright = v end, yOff); yOff = yOff + 30
-    createToggle("Ноклип", Settings.Noclip, function(v) Settings.Noclip = v end, yOff); yOff = yOff + 30
-
-    createSlider("Скорость", 0, 100, 16, function(v) Settings.SpeedValue = v end, yOff); yOff = yOff + 38
-    createSlider("Прыжок", 0, 100, 50, function(v) Settings.JumpValue = v end, yOff); yOff = yOff + 38
-
-    burger.MouseButton1Click:Connect(function() mainFrame.Visible = not mainFrame.Visible end)
-    closeBtn.MouseButton1Click:Connect(function() mainFrame.Visible = false end)
-
-    -- Перетаскивание
+    -- Перетаскивание меню
     local drag = false
     local dragStart, startPos
-    title.InputBegan:Connect(function(input)
+    mainFrame.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             drag = true
             dragStart = input.Position
@@ -228,7 +176,7 @@ local function createUI()
         end
     end)
 
-    print("✅ Dandy World v6.0 loaded. Press '≡' to open menu.")
+    print("✅ Твой кастомный GUI загружен! Нажми на бургер (≡), чтобы открыть меню.")
 end
 
 -- ================== ESP (HIGHLIGHT) ==================
@@ -245,7 +193,6 @@ local function setupESP()
     end
 
     game:GetService("RunService").Heartbeat:Connect(function()
-        -- Очистка
         for _, v in ipairs(workspace:GetDescendants()) do
             if v:IsA("Highlight") and v.Name:match("ESP$") then v:Destroy() end
         end
@@ -299,6 +246,18 @@ local function setupESP()
                             clone.Adornee = obj
                             clone.Parent = obj
                         end
+                    end
+                end
+            end
+        end
+
+        if Settings.CapsuleESP then
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("Model") and (obj.Name:lower():match("capsule") or obj.Name:lower():match("pod")) then
+                    if not obj:FindFirstChild("CapsuleESP") then
+                        local clone = makeESP(Color3.fromRGB(255,0,255), "CapsuleESP")
+                        clone.Adornee = obj
+                        clone.Parent = obj
                     end
                 end
             end
@@ -428,7 +387,7 @@ task.spawn(function()
     end
 end)
 
--- ================== АВТО-СБОР ==================
+-- ================== АВТО-СБОР ПРЕДМЕТОВ ==================
 task.spawn(function()
     while task.wait(0.3) do
         if not Settings.AutoCollect then continue end
@@ -453,6 +412,28 @@ task.spawn(function()
     end
 end)
 
+-- ================== АВТО-СБОР КАПСУЛ ==================
+task.spawn(function()
+    while task.wait(0.3) do
+        if not Settings.AutoCapsule then continue end
+        local p = game.Players.LocalPlayer
+        if not p or not p.Character then continue end
+        local root = p.Character:FindFirstChild("HumanoidRootPart") or p.Character.PrimaryPart
+        if not root then continue end
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("Model") and (obj.Name:lower():match("capsule") or obj.Name:lower():match("pod")) then
+                local pos = obj.PrimaryPart and obj.PrimaryPart.Position or obj:FindFirstChild("HumanoidRootPart") and obj:FindFirstChild("HumanoidRootPart").Position
+                if pos and (root.Position - pos).Magnitude < 15 then
+                    teleportTo(pos + Vector3.new(0,2,0))
+                    task.wait(0.1)
+                    interactWith(obj)
+                    break
+                end
+            end
+        end
+    end
+end)
+
 -- ================== НОКЛИП ==================
 task.spawn(function()
     while task.wait(0.1) do
@@ -460,7 +441,9 @@ task.spawn(function()
             local char = game.Players.LocalPlayer.Character
             if char then
                 for _, part in ipairs(char:GetDescendants()) do
-                    if part:IsA("BasePart") then part.CanCollide = false end
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
                 end
             end
         end
@@ -504,4 +487,4 @@ end)
 -- ================== ЗАПУСК ==================
 createUI()
 setupESP()
-print("✅ Dandy World v6.0 loaded. Press '≡' to open menu.")
+print("✅ Твой скрипт с кастомным GUI полностью загружен! Нажми на бургер (≡) в левом верхнем углу.")
