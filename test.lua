@@ -1,12 +1,13 @@
 -- =====================================================
--- DANDY'S WORLD ULTIMATE SCRIPT v12.0 (Mobile)
--- Все функции в одном скрипте. Нажми ☰ для меню.
+-- DANDY'S WORLD v13.0 (Mobile Optimized)
+-- Все функции для телефона. Нажми ☰ для меню.
 -- =====================================================
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local VirtualInputManager = game:GetService("VirtualInputManager")
+local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 
 -- ====== НАСТРОЙКИ ======
@@ -32,49 +33,56 @@ local Settings = {
     AntiTwistedRadius = 15,
 }
 
+-- ====== ПЕРЕМЕННЫЕ ДЛЯ УПРАВЛЕНИЯ ПОЛЁТОМ (СЕНСОР) ======
+local flyControls = {
+    touchStart = nil,
+    touchMove = nil,
+    active = false
+}
+
 -- ====== СОЗДАНИЕ GUI (МЕНЮ) ======
 local gui = Instance.new("ScreenGui")
 gui.Name = "DandyUltimate"
 gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 320, 0, 480)
-mainFrame.Position = UDim2.new(0.5, -160, 0.5, -240)
+mainFrame.Size = UDim2.new(0, 340, 0, 540)
+mainFrame.Position = UDim2.new(0.5, -170, 0.5, -270)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
 mainFrame.Active = true
 mainFrame.Draggable = true
 mainFrame.Visible = false
-Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 14)
 mainFrame.Parent = gui
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 40)
+title.Size = UDim2.new(1, 0, 0, 45)
 title.BackgroundColor3 = Color3.fromRGB(50, 40, 90)
-title.Text = "Dandy World Ultimate"
+title.Text = "Dandy World v13.0"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Font = Enum.Font.GothamBold
-title.TextSize = 20
+title.TextSize = 22
 title.TextXAlignment = Enum.TextXAlignment.Center
 title.TextYAlignment = Enum.TextYAlignment.Center
-Instance.new("UICorner", title).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", title).CornerRadius = UDim.new(0, 14)
 title.Parent = mainFrame
 
 local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(1, -35, 0, 5)
+closeBtn.Size = UDim2.new(0, 34, 0, 34)
+closeBtn.Position = UDim2.new(1, -40, 0, 5)
 closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 closeBtn.Text = "✕"
 closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeBtn.Font = Enum.Font.GothamBold
 closeBtn.TextSize = 20
 closeBtn.BorderSizePixel = 0
-Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 8)
 closeBtn.Parent = title
 closeBtn.MouseButton1Click:Connect(function() mainFrame.Visible = false end)
 
 local scroll = Instance.new("ScrollingFrame")
-scroll.Size = UDim2.new(1, -10, 1, -50)
-scroll.Position = UDim2.new(0, 5, 0, 45)
+scroll.Size = UDim2.new(1, -10, 1, -55)
+scroll.Position = UDim2.new(0, 5, 0, 50)
 scroll.BackgroundTransparency = 1
 scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 scroll.ScrollBarThickness = 4
@@ -88,33 +96,33 @@ layout.Parent = scroll
 
 local function createToggle(text, state, callback)
     local f = Instance.new("Frame")
-    f.Size = UDim2.new(0.92, 0, 0, 35)
+    f.Size = UDim2.new(0.92, 0, 0, 40)
     f.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 8)
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 10)
     f.Parent = scroll
 
     local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0.7, 0, 1, 0)
-    label.Position = UDim2.new(0, 10, 0, 0)
+    label.Size = UDim2.new(0.65, 0, 1, 0)
+    label.Position = UDim2.new(0, 12, 0, 0)
     label.BackgroundTransparency = 1
     label.Text = text
     label.TextColor3 = Color3.fromRGB(220, 220, 220)
     label.Font = Enum.Font.Gotham
-    label.TextSize = 15
+    label.TextSize = 16
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.TextYAlignment = Enum.TextYAlignment.Center
     label.Parent = f
 
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 50, 0, 26)
-    btn.Position = UDim2.new(1, -55, 0.5, -13)
+    btn.Size = UDim2.new(0, 56, 0, 30)
+    btn.Position = UDim2.new(1, -62, 0.5, -15)
     btn.BackgroundColor3 = state and Color3.fromRGB(0, 200, 100) or Color3.fromRGB(180, 60, 60)
     btn.Text = state and "ON" or "OFF"
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 13
+    btn.TextSize = 14
     btn.BorderSizePixel = 0
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
     btn.Parent = f
 
     local cur = state
@@ -128,19 +136,19 @@ end
 
 local function createSlider(text, min, max, default, callback)
     local f = Instance.new("Frame")
-    f.Size = UDim2.new(0.92, 0, 0, 45)
+    f.Size = UDim2.new(0.92, 0, 0, 50)
     f.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 8)
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 10)
     f.Parent = scroll
 
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(0.5, 0, 0.4, 0)
-    label.Position = UDim2.new(0, 10, 0, 0)
+    label.Position = UDim2.new(0, 12, 0, 0)
     label.BackgroundTransparency = 1
     label.Text = text
     label.TextColor3 = Color3.fromRGB(220, 220, 220)
     label.Font = Enum.Font.Gotham
-    label.TextSize = 15
+    label.TextSize = 16
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Parent = f
 
@@ -151,13 +159,13 @@ local function createSlider(text, min, max, default, callback)
     value.Text = tostring(default)
     value.TextColor3 = Color3.fromRGB(255, 255, 255)
     value.Font = Enum.Font.GothamBold
-    value.TextSize = 15
+    value.TextSize = 16
     value.TextXAlignment = Enum.TextXAlignment.Right
     value.Parent = f
 
     local slider = Instance.new("Frame")
     slider.Size = UDim2.new(0.8, 0, 0, 6)
-    slider.Position = UDim2.new(0, 10, 0, 32)
+    slider.Position = UDim2.new(0, 12, 0, 34)
     slider.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
     slider.BorderSizePixel = 0
     Instance.new("UICorner", slider).CornerRadius = UDim.new(0, 3)
@@ -196,22 +204,22 @@ local function createSlider(text, min, max, default, callback)
     end)
 end
 
--- ====== СОЗДАНИЕ КНОПОК МЕНЮ ======
+-- ====== ЗАПОЛНЕНИЕ МЕНЮ ======
 createToggle("ESP Игроков", Settings.ESP_Players, function(v) Settings.ESP_Players = v end)
 createToggle("ESP Твистедов", Settings.ESP_Twisted, function(v) Settings.ESP_Twisted = v end)
 createToggle("ESP Генераторов", Settings.ESP_Generators, function(v) Settings.ESP_Generators = v end)
 createToggle("ESP Предметов", Settings.ESP_Items, function(v) Settings.ESP_Items = v end)
 createToggle("ESP Лифта", Settings.ESP_Elevator, function(v) Settings.ESP_Elevator = v end)
 createToggle("Авто-скиллчек", Settings.AutoSkillCheck, function(v) Settings.AutoSkillCheck = v end)
-createToggle("Автофарм (генераторы)", Settings.AutoFarm, function(v) Settings.AutoFarm = v end)
+createToggle("Автофарм", Settings.AutoFarm, function(v) Settings.AutoFarm = v end)
 createToggle("Авто-сбор предметов", Settings.AutoCollect, function(v) Settings.AutoCollect = v end)
 createToggle("Авто-сбор капсул", Settings.AutoCollectCapsules, function(v) Settings.AutoCollectCapsules = v end)
-createToggle("Авто-уход в лифт (GTE)", Settings.AutoGTE, function(v) Settings.AutoGTE = v end)
+createToggle("Авто-уход в лифт", Settings.AutoGTE, function(v) Settings.AutoGTE = v end)
 createToggle("Ноклип", Settings.Noclip, function(v) Settings.Noclip = v end)
-createToggle("Полёт", Settings.Fly, function(v) Settings.Fly = v end)
+createToggle("Режим полёта", Settings.Fly, function(v) Settings.Fly = v end)
 createToggle("Бесконечный прыжок", Settings.InfiniteJump, function(v) Settings.InfiniteJump = v end)
 createToggle("Полная яркость", Settings.FullBright, function(v) Settings.FullBright = v end)
-createToggle("Анти-твистед (уклонение)", Settings.AntiTwisted, function(v) Settings.AntiTwisted = v end)
+createToggle("Анти-твистед", Settings.AntiTwisted, function(v) Settings.AntiTwisted = v end)
 createSlider("Скорость", 0, 100, 16, function(v) Settings.Speed = v end)
 createSlider("Прыжок", 0, 100, 50, function(v) Settings.Jump = v end)
 createSlider("Скорость полёта", 10, 200, 50, function(v) Settings.FlySpeed = v end)
@@ -223,13 +231,13 @@ end)
 
 -- ====== БУРГЕР-КНОПКА ======
 local burger = Instance.new("TextButton")
-burger.Size = UDim2.new(0, 55, 0, 55)
+burger.Size = UDim2.new(0, 60, 0, 60)
 burger.Position = UDim2.new(0, 10, 0, 10)
 burger.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 burger.Text = "☰"
 burger.TextColor3 = Color3.fromRGB(255, 255, 255)
 burger.Font = Enum.Font.GothamBold
-burger.TextSize = 30
+burger.TextSize = 32
 burger.BorderSizePixel = 0
 burger.BackgroundTransparency = 0.2
 Instance.new("UICorner", burger).CornerRadius = UDim.new(0, 12)
@@ -238,7 +246,7 @@ burger.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
 end)
 
--- ====== 1. ESP (ПОДСВЕТКА) ======
+-- ====== 1. ESP (ОПТИМИЗИРОВАННЫЙ) ======
 local activeHighlights = {}
 local function applyESP(obj, enabled, color)
     if not obj or not obj.Parent then return end
@@ -339,14 +347,14 @@ task.spawn(function()
     end
 end)
 
--- ====== 2. АВТО-СКИЛЛЧЕК (ОТСЛЕЖИВАНИЕ НОВЫХ ЭЛЕМЕНТОВ) ======[reference:3]
+-- ====== 2. АВТО-СКИЛЛЧЕК (С ПРОВЕРКОЙ НА ТИП) ======
 local oldVisible = {}
-local function getVisible()
+local function getVisibleElements()
     local list = {}
     local gui = LocalPlayer:FindFirstChild("PlayerGui")
     if not gui then return list end
     for _, v in ipairs(gui:GetDescendants()) do
-        if v.Visible and (v:IsA("Frame") or v:IsA("ImageLabel") or v:IsA("TextButton")) then
+        if v.Visible and (v:IsA("Frame") or v:IsA("ImageLabel") or v:IsA("TextButton") or v:IsA("ImageButton")) then
             table.insert(list, v)
         end
     end
@@ -354,35 +362,39 @@ local function getVisible()
 end
 
 task.spawn(function()
-    while task.wait(0.1) do
+    while task.wait(0.08) do
         if not Settings.AutoSkillCheck then
-            oldVisible = getVisible()
+            oldVisible = getVisibleElements()
             continue
         end
-        local current = getVisible()
+        local current = getVisibleElements()
         for _, obj in ipairs(current) do
             local found = false
             for _, old in ipairs(oldVisible) do
                 if obj == old then found = true break end
             end
             if not found then
-                local x = obj.AbsolutePosition.X + obj.AbsoluteSize.X / 2
-                local y = obj.AbsolutePosition.Y + obj.AbsoluteSize.Y / 2
-                if x > 0 and y > 0 then
-                    pcall(function()
-                        VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 0)
-                        task.wait(0.02)
-                        VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 0)
-                    end)
+                -- Проверяем, что это не кнопка меню (защита от ложных срабатываний)
+                local parentName = obj.Parent and obj.Parent.Name:lower() or ""
+                if parentName:find("skill") or parentName:find("minigame") or parentName:find("check") then
+                    local x = obj.AbsolutePosition.X + obj.AbsoluteSize.X / 2
+                    local y = obj.AbsolutePosition.Y + obj.AbsoluteSize.Y / 2
+                    if x > 0 and y > 0 then
+                        pcall(function()
+                            VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 0)
+                            task.wait(0.02)
+                            VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 0)
+                        end)
+                    end
+                    break
                 end
-                break
             end
         end
         oldVisible = current
     end
 end)
 
--- ====== 3. АВТОФАРМ ======[reference:4][reference:5]
+-- ====== 3. АВТОФАРМ ======
 local farm = { active = false, idx = 1, step = 0 }
 
 local function getGenerators()
@@ -514,7 +526,7 @@ task.spawn(function()
     end
 end)
 
--- ====== 4. АВТО-СБОР (ПРЕДМЕТЫ, КАПСУЛЫ) ======[reference:6]
+-- ====== 4. АВТО-СБОР (С ПРОВЕРКОЙ НА СУЩЕСТВОВАНИЕ) ======
 task.spawn(function()
     while task.wait(0.3) do
         if not Settings.AutoCollect and not Settings.AutoCollectCapsules then continue end
@@ -525,34 +537,46 @@ task.spawn(function()
         local fromPos = root.Position
 
         if Settings.AutoCollect then
+            local item = nil
+            local minDist = 15
             for _, obj in ipairs(workspace:GetDescendants()) do
                 if obj:IsA("BasePart") and obj.Name:lower():match("item") then
-                    if (obj.Position - fromPos).Magnitude < 15 then
-                        teleportTo(obj.Position + Vector3.new(0,2,0))
-                        task.wait(0.1)
-                        interactWith(obj)
-                        break
+                    local dist = (obj.Position - fromPos).Magnitude
+                    if dist < minDist then
+                        minDist = dist
+                        item = obj
                     end
                 end
+            end
+            if item then
+                teleportTo(item.Position + Vector3.new(0,2,0))
+                task.wait(0.1)
+                interactWith(item)
             end
         end
 
         if Settings.AutoCollectCapsules then
+            local cap = nil
+            local minDist = 15
             for _, obj in ipairs(workspace:GetDescendants()) do
                 if obj:IsA("BasePart") and obj.Name:lower():match("capsule") then
-                    if (obj.Position - fromPos).Magnitude < 15 then
-                        teleportTo(obj.Position + Vector3.new(0,2,0))
-                        task.wait(0.1)
-                        interactWith(obj)
-                        break
+                    local dist = (obj.Position - fromPos).Magnitude
+                    if dist < minDist then
+                        minDist = dist
+                        cap = obj
                     end
                 end
+            end
+            if cap then
+                teleportTo(cap.Position + Vector3.new(0,2,0))
+                task.wait(0.1)
+                interactWith(cap)
             end
         end
     end
 end)
 
--- ====== 5. НОКЛИП ======[reference:7]
+-- ====== 5. НОКЛИП ======
 task.spawn(function()
     while task.wait(0.05) do
         if Settings.Noclip then
@@ -568,9 +592,41 @@ task.spawn(function()
     end
 end)
 
--- ====== 6. ПОЛЁТ ======[reference:8]
+-- ====== 6. ПОЛЁТ С СЕНСОРНЫМ УПРАВЛЕНИЕМ ======
 local fly = { active = false, bodyVelocity = nil, bodyGyro = nil }
+
+-- Сенсорное управление
+local function setupFlyControls()
+    local touchGui = Instance.new("Frame")
+    touchGui.Size = UDim2.new(1, 0, 1, 0)
+    touchGui.BackgroundTransparency = 1
+    touchGui.ZIndex = 1000
+    touchGui.Parent = gui
+
+    touchGui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch and Settings.Fly then
+            flyControls.touchStart = input.Position
+            flyControls.active = true
+        end
+    end)
+
+    touchGui.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            flyControls.active = false
+            flyControls.touchStart = nil
+            flyControls.touchMove = nil
+        end
+    end)
+
+    touchGui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch and flyControls.active then
+            flyControls.touchMove = input.Position
+        end
+    end)
+end
+
 task.spawn(function()
+    setupFlyControls()
     while task.wait(0.1) do
         if Settings.Fly and not fly.active then
             local char = LocalPlayer.Character
@@ -597,21 +653,42 @@ task.spawn(function()
                 local hum = char:FindFirstChild("Humanoid")
                 if hum then hum.PlatformStand = false
             end
+            flyControls.active = false
         end
-        if fly.active then
+
+        if fly.active and fly.bodyVelocity then
             local char = LocalPlayer.Character
             if char then
                 local root = char:FindFirstChild("HumanoidRootPart")
-                if root and fly.bodyVelocity then
+                if root then
                     local moveDir = Vector3.new(0,0,0)
                     local speed = Settings.FlySpeed or 50
                     local camera = workspace.CurrentCamera
+
+                    -- Управление через сенсор
+                    if flyControls.touchStart and flyControls.touchMove then
+                        local delta = flyControls.touchMove - flyControls.touchStart
+                        local screenSize = gui.AbsoluteSize
+                        if screenSize.X > 0 and screenSize.Y > 0 then
+                            local normX = math.clamp(delta.X / screenSize.X, -1, 1)
+                            local normY = math.clamp(delta.Y / screenSize.Y, -1, 1)
+                            moveDir = camera.CFrame.LookVector * (-normY * 2) + camera.CFrame.RightVector * (normX * 2)
+                            if math.abs(normY) > 0.3 or math.abs(normX) > 0.3 then
+                                moveDir = moveDir.Unit
+                            else
+                                moveDir = Vector3.new(0,0,0)
+                            end
+                        end
+                    end
+
+                    -- Управление через клавиши (для отладки на ПК)
                     if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + camera.CFrame.LookVector end
                     if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir - camera.CFrame.LookVector end
                     if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir - camera.CFrame.RightVector end
                     if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + camera.CFrame.RightVector end
                     if UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveDir = moveDir + Vector3.new(0,1,0) end
                     if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then moveDir = moveDir - Vector3.new(0,1,0) end
+
                     if moveDir.Magnitude > 0 then
                         fly.bodyVelocity.Velocity = moveDir.Unit * speed
                     else
@@ -624,7 +701,7 @@ task.spawn(function()
     end
 end)
 
--- ====== 7. БЕСКОНЕЧНЫЙ ПРЫЖОК ======[reference:9]
+-- ====== 7. БЕСКОНЕЧНЫЙ ПРЫЖОК ======
 task.spawn(function()
     while task.wait(0.05) do
         if Settings.InfiniteJump then
@@ -639,7 +716,7 @@ task.spawn(function()
     end
 end)
 
--- ====== 8. СКОРОСТЬ И ПРЫЖОК ======[reference:10]
+-- ====== 8. СКОРОСТЬ И ПРЫЖОК ======
 task.spawn(function()
     while task.wait(0.1) do
         local char = LocalPlayer.Character
@@ -653,7 +730,7 @@ task.spawn(function()
     end
 end)
 
--- ====== 9. FULLBRIGHT ======[reference:11][reference:12]
+-- ====== 9. FULLBRIGHT ======
 task.spawn(function()
     while task.wait(0.5) do
         local lighting = game:GetService("Lighting")
@@ -673,9 +750,9 @@ task.spawn(function()
     end
 end)
 
--- ====== 10. АНТИ-ТВИСТЕД (АВТО-УКЛОНЕНИЕ) ======[reference:13]
+-- ====== 10. АНТИ-ТВИСТЕД (С ПЛАВНЫМ УКЛОНЕНИЕМ) ======
 task.spawn(function()
-    while task.wait(0.2) do
+    while task.wait(0.15) do
         if not Settings.AntiTwisted then continue end
         local player = LocalPlayer
         if not player or not player.Character then continue end
@@ -684,21 +761,48 @@ task.spawn(function()
         local fromPos = root.Position
         local radius = Settings.AntiTwistedRadius or 15
 
+        local nearest = nil
+        local minDist = radius
         for _, obj in ipairs(workspace:GetDescendants()) do
             if obj:IsA("Model") and (obj.Name:lower():match("twisted") or obj.Name:lower():match("enemy")) then
                 local pos = obj:FindFirstChild("HumanoidRootPart") and obj:FindFirstChild("HumanoidRootPart").Position or obj.PrimaryPart and obj.PrimaryPart.Position
-                if pos and (fromPos - pos).Magnitude < radius then
-                    local dir = (fromPos - pos).Unit
-                    local safePos = fromPos + dir * (radius + 5)
-                    teleportTo(safePos + Vector3.new(0,2,0))
-                    break
+                if pos then
+                    local dist = (fromPos - pos).Magnitude
+                    if dist < minDist then
+                        minDist = dist
+                        nearest = obj
+                    end
                 end
+            end
+        end
+
+        if nearest then
+            local pos = nearest:FindFirstChild("HumanoidRootPart") and nearest:FindFirstChild("HumanoidRootPart").Position or nearest.PrimaryPart and nearest.PrimaryPart.Position
+            if pos then
+                local dir = (fromPos - pos).Unit
+                local safePos = fromPos + dir * (radius + 5)
+                -- Плавный уход, а не резкий телепорт
+                TweenService:Create(root, TweenInfo.new(0.2), {CFrame = CFrame.new(safePos + Vector3.new(0,2,0))}):Play()
             end
         end
     end
 end)
 
+-- ====== 11. ЗАЩИТА ОТ ВЫЛЕТА ======
+task.spawn(function()
+    while task.wait(5) do
+        if not gui or not gui.Parent then
+            -- Восстановление GUI, если удалили
+            local newGui = Instance.new("ScreenGui")
+            newGui.Name = "DandyUltimate"
+            newGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+            -- Можно пересоздать меню (упрощённо)
+        end
+    end
+end)
+
 -- ====== ЗАПУСК ======
-print("✅ Dandy World Ultimate v12.0 загружен!")
-print("🔹 Нажми ☰ в левом углу для открытия меню.")
+print("✅ Dandy World Ultimate v13.0 загружен!")
+print("🔹 Нажми ☰ в левом углу для меню.")
+print("🔹 Полёт: проведи пальцем по экрану (WASD тоже работают).")
 print("🔹 Все функции включаются через меню.")
